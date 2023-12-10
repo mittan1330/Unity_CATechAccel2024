@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RunGame.Charactor;
+using BattleGame.Charactor;
 
-namespace RunGame.item
+namespace BattleGame.item
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Collider))]

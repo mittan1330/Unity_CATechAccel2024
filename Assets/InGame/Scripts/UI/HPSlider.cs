@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using RunGame.Charactor;
+using BattleGame.Charactor;
 
-namespace RunGame.UI
+namespace BattleGame.UI
 {
     public class HPSlider : MonoBehaviour
     {

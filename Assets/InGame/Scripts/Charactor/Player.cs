@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RunGame.Charactor
+namespace BattleGame.Charactor
 {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(CapsuleCollider))]
@@ -19,8 +19,6 @@ namespace RunGame.Charactor
         // 以下キャラクターコントローラ用パラメタ
         // 前進速度
         public float forwardSpeed = 7.0f;
-        // 後退速度
-        public float backwardSpeed = 2.0f;
         // 旋回速度
         public float rotateSpeed = 2.0f;
         // ジャンプ威力
@@ -35,6 +33,8 @@ namespace RunGame.Charactor
         private Vector3 orgVectColCenter;
         private Animator anim;                          // キャラにアタッチされるアニメーターへの参照
         private AnimatorStateInfo currentBaseState;         // base layerで使われる、アニメーターの現在の状態の参照
+		private AnimatorStateInfo attackBaseState;
+		[SerializeField] CapsuleCollider collider;
 
 		float h;
 		float v;
@@ -45,10 +45,11 @@ namespace RunGame.Charactor
         static int backState = Animator.StringToHash("Base Layer.WalkBack");
         static int jumpState = Animator.StringToHash("Base Layer.Jump");
         static int restState = Animator.StringToHash("Base Layer.Rest");
-        #endregion
+		static int attackState = Animator.StringToHash("Attack.Idle");
+		#endregion
 
-        #region monofunction
-        void Start()
+		#region monofunction
+		void Start()
 		{
 			Init();
 		}
@@ -62,6 +63,28 @@ namespace RunGame.Charactor
 		{
 			OnMoveFunction();
 		}
+
+        private void LateUpdate()
+        {
+			collider.enabled = true;
+
+			attackBaseState = anim.GetCurrentAnimatorStateInfo(2);
+
+			if (attackBaseState.fullPathHash == attackState)
+			{
+				collider.enabled = false;
+			}
+		}
+
+        private void OnCollisionStay(Collision collision)
+        {
+            if (collision.gameObject.tag == "Enemy")
+            {
+				Debug.Log("Enemy");
+				hp -= 1f;
+            }
+        }
+
         #endregion
 
         #region function
@@ -125,15 +148,7 @@ namespace RunGame.Charactor
 
 			Vector3 velocity = cameraForward * v + Camera.main.transform.right * h;
 
-			//以下のvの閾値は、Mecanim側のトランジションと一緒に調整する
-			if (v > 0.1 || h != 0)
-			{
-				velocity *= forwardSpeed;       // 移動速度を掛ける
-			}
-			else if (v < -0.1)
-			{
-				velocity *= backwardSpeed;  // 移動速度を掛ける
-			}
+			velocity *= forwardSpeed;
 
 			// 上下のキー入力でキャラクターを移動させる
 			transform.position += velocity * Time.fixedDeltaTime;
@@ -159,7 +174,7 @@ namespace RunGame.Charactor
 			// JUMP中の処理
 			// 現在のベースレイヤーがjumpStateの時
 			else if (currentBaseState.fullPathHash == jumpState)
-			{													
+			{
 				if (!anim.IsInTransition(0))
 				{
 
@@ -201,6 +216,13 @@ namespace RunGame.Charactor
 			// 現在のベースレイヤーがidleStateの時
 			else if (currentBaseState.fullPathHash == idleState)
 			{
+				anim.SetInteger("Attack", 0);
+				if (Input.GetMouseButtonDown(0))
+				{
+					anim.SetInteger("Attack", 1);
+					return;
+				}
+
 				//カーブでコライダ調整をしている時は、念のためにリセットする
 				if (useCurves)
 				{
