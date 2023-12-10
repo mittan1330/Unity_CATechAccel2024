@@ -7,6 +7,8 @@ using Unity.Burst;
 
 namespace BattleGame.FieldGenerator
 {
+    // TODO 書き途中ステージ等の管理用スクリプトをJobSystemで回す。
+
     struct UpdatePosition : IJobParallelFor
     {
         // 並列でしたい処理
@@ -21,8 +23,6 @@ namespace BattleGame.FieldGenerator
 
         [SerializeField] GameObject[] _baseFields;
         [SerializeField] Vector2 _size;
-
-        [SerializeField] int _groundPool = 100;
 
         private void Start()
         {

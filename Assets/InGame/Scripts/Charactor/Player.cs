@@ -34,7 +34,6 @@ namespace BattleGame.Charactor
         private Animator anim;                          // キャラにアタッチされるアニメーターへの参照
         private AnimatorStateInfo currentBaseState;         // base layerで使われる、アニメーターの現在の状態の参照
 		private AnimatorStateInfo attackBaseState;
-		[SerializeField] CapsuleCollider collider;
 
 		float h;
 		float v;
@@ -62,18 +61,6 @@ namespace BattleGame.Charactor
         void FixedUpdate()
 		{
 			OnMoveFunction();
-		}
-
-        private void LateUpdate()
-        {
-			collider.enabled = true;
-
-			attackBaseState = anim.GetCurrentAnimatorStateInfo(2);
-
-			if (attackBaseState.fullPathHash == attackState)
-			{
-				collider.enabled = false;
-			}
 		}
 
         private void OnCollisionStay(Collision collision)
