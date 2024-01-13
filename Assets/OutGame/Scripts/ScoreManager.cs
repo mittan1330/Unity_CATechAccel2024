@@ -23,7 +23,23 @@ public class ScoreManager : MonoBehaviour
         {
             rankCells[i].userName.text = userScoreData[i].name;
             rankCells[i].score.text = userScoreData[i].score;
-            rankCells[i].rank.text = userScoreData[i].rank;
+
+            int dataScore = int.Parse(userScoreData[i].score);
+            switch (dataScore)
+            {
+                case < 10:
+                    rankCells[i].rank.text = "D";
+                    break;
+                case < 20:
+                    rankCells[i].rank.text = "C";
+                    break;
+                case < 40:
+                    rankCells[i].rank.text = "B";
+                    break;
+                case < 50:
+                    rankCells[i].rank.text = "A";
+                    break;
+            }
         }
     }
 }
