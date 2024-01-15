@@ -1,6 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+
+[System.Serializable]
+public class ScoreData
+{
+    public DataClass[] userScoreData;
+}
 
 [System.Serializable]
 public class DataClass
@@ -10,36 +17,79 @@ public class DataClass
     public string rank;
 }
 
+public class Utility : MonoBehaviour
+{
+    public enum Rank
+    {
+        Error,
+        D,
+        C,
+        B,
+        A,
+        S
+    }
+
+    public static string ScoreToRank(string number)
+    {
+        if (int.TryParse(number, out int dataScore))
+        {
+            switch (dataScore)
+            {
+                case < 10:
+                    return Rank.D.ToString();
+                case < 20:
+                    return Rank.C.ToString();
+                case < 40:
+                    return Rank.B.ToString();
+                case < 50:
+                    return Rank.A.ToString();
+                default:
+                    return Rank.Error.ToString();
+            }
+        }
+        else
+        {
+            return "Error";
+        }
+    }
+}
+
 public class ScoreManager : MonoBehaviour
 {
-
-    public DataClass[] userScoreData;
+    public ScoreData scoreData;
     public RankCell[] rankCells;
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < rankCells.Length; i++)
-        {
-            rankCells[i].userName.text = userScoreData[i].name;
-            rankCells[i].score.text = userScoreData[i].score;
+        ShowRankingScore();
+    }
 
-            int dataScore = int.Parse(userScoreData[i].score);
-            switch (dataScore)
-            {
-                case < 10:
-                    rankCells[i].rank.text = "D";
-                    break;
-                case < 20:
-                    rankCells[i].rank.text = "C";
-                    break;
-                case < 40:
-                    rankCells[i].rank.text = "B";
-                    break;
-                case < 50:
-                    rankCells[i].rank.text = "A";
-                    break;
-            }
+    void UpdateUIWithUserData()
+    {
+        for (int i = 0; i < rankCells.Length && i < scoreData.userScoreData.Length; i++)
+        {
+            rankCells[i].userName.text = scoreData.userScoreData[i].name;
+            rankCells[i].score.text = scoreData.userScoreData[i].score;
+            rankCells[i].rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score);
+        }
+    }
+
+    void ShowRankingScore()
+    {
+        string jsonFilePath = Application.dataPath + "/OutGame/Scripts/score.json";
+
+        if (File.Exists(jsonFilePath))
+        {
+            string jsonContent = File.ReadAllText(jsonFilePath);
+
+            scoreData = JsonUtility.FromJson<ScoreData>("{\"userScoreData\":" + jsonContent + "}");
+
+            UpdateUIWithUserData();
+        }
+        else
+        {
+            Debug.LogError("Json file not found at path: " + jsonFilePath);
         }
     }
 }
