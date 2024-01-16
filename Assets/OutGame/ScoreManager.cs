@@ -12,24 +12,16 @@ public class DataClass
 
 public class ScoreManager : MonoBehaviour
 {
-
     public DataClass[] userScoreData;
     public RankCell[] rankCells;
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < rankCells.Length; i++)
+        for (int i = 0; i < rankCells.Length; i++)
         {
-            rankCells[i].userName.text = userScoreData[i].name;
-            rankCells[i].score.text = userScoreData[i].score;
-            rankCells[i].rank.text = userScoreData[i].rank;
+            RankCell RankCellScript = rankCells[i].GetComponent<RankCell>();
+            RankCellScript.MakeText(userScoreData[i].name, userScoreData[i].score, userScoreData[i].rank);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
