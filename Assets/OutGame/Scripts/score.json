@@ -1,18 +1,82 @@
 [
-  {
-    "name": "Alice",
-    "score": "15"
-  },
-  {
-    "name": "Bob",
-    "score": "25"
-  },
-  {
-    "name": "Charlie",
-    "score": "5"
-  },
-  {
-    "name": "Jobs",
-    "score": "55"
-  }
+    {
+        "name": "Alice",
+        "score": "15"
+    },
+    {
+        "name": "Bob",
+        "score": "25"
+    },
+    {
+        "name": "Charlie",
+        "score": "5"
+    },
+    {
+        "name": "Jobs",
+        "score": "55"
+    },
+    {
+        "name": "Eva",
+        "score": "18"
+    },
+    {
+        "name": "Frank",
+        "score": "30"
+    },
+    {
+        "name": "Grace",
+        "score": "12"
+    },
+    {
+        "name": "Hank",
+        "score": "42"
+    },
+    {
+        "name": "Ivy",
+        "score": "8"
+    },
+    {
+        "name": "Jack",
+        "score": "38"
+    },
+    {
+        "name": "Kelly",
+        "score": "20"
+    },
+    {
+        "name": "Leo",
+        "score": "50"
+    },
+    {
+        "name": "Mia",
+        "score": "28"
+    },
+    {
+        "name": "Nina",
+        "score": "10"
+    },
+    {
+        "name": "Oscar",
+        "score": "45"
+    },
+    {
+        "name": "Penny",
+        "score": "22"
+    },
+    {
+        "name": "Quinn",
+        "score": "33"
+    },
+    {
+        "name": "Ryan",
+        "score": "16"
+    },
+    {
+        "name": "Sara",
+        "score": "48"
+    },
+    {
+        "name": "Tom",
+        "score": "14"
+    }
 ]

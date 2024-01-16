@@ -59,6 +59,9 @@ public class ScoreManager : MonoBehaviour
     public ScoreData scoreData;
     public RankCell[] rankCells;
 
+    [SerializeField] private GameObject rankCellPrefab;
+    [SerializeField] private Transform canvasTransform;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,11 +70,13 @@ public class ScoreManager : MonoBehaviour
 
     void UpdateUIWithUserData()
     {
-        for (int i = 0; i < rankCells.Length && i < scoreData.userScoreData.Length; i++)
+        for (int i = 0; i < scoreData.userScoreData.Length; i++)
         {
-            rankCells[i].userName.text = scoreData.userScoreData[i].name;
-            rankCells[i].score.text = scoreData.userScoreData[i].score;
-            rankCells[i].rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score);
+            var dataCell = Instantiate(rankCellPrefab, canvasTransform).GetComponent<RankCell>();
+
+            dataCell.userName.text = scoreData.userScoreData[i].name;
+            dataCell.score.text = scoreData.userScoreData[i].score;
+            dataCell.rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score);
         }
     }
 
