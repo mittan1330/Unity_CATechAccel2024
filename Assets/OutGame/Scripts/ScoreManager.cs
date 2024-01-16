@@ -41,7 +41,7 @@ public class Utility : MonoBehaviour
                     return Rank.C.ToString();
                 case < 40:
                     return Rank.B.ToString();
-                case < 50:
+                case < 70:
                     return Rank.A.ToString();
                 default:
                     return Rank.Error.ToString();
