@@ -13,46 +13,11 @@ public class ScoreData
 public class DataClass
 {
     public string name;
-    public string score;
+    public int score;
     public string rank;
 }
 
-public class Utility : MonoBehaviour
-{
-    public enum Rank
-    {
-        Error,
-        D,
-        C,
-        B,
-        A,
-        S
-    }
 
-    public static string ScoreToRank(string number)
-    {
-        if (int.TryParse(number, out int dataScore))
-        {
-            switch (dataScore)
-            {
-                case < 10:
-                    return Rank.D.ToString();
-                case < 20:
-                    return Rank.C.ToString();
-                case < 40:
-                    return Rank.B.ToString();
-                case < 70:
-                    return Rank.A.ToString();
-                default:
-                    return Rank.Error.ToString();
-            }
-        }
-        else
-        {
-            return "Error";
-        }
-    }
-}
 
 public class ScoreManager : MonoBehaviour
 {
@@ -75,7 +40,7 @@ public class ScoreManager : MonoBehaviour
             var dataCell = Instantiate(rankCellPrefab, canvasTransform).GetComponent<RankCell>();
 
             dataCell.userName.text = scoreData.userScoreData[i].name;
-            dataCell.score.text = scoreData.userScoreData[i].score;
+            dataCell.score.text = scoreData.userScoreData[i].score.ToString();
             dataCell.rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score);
         }
     }
