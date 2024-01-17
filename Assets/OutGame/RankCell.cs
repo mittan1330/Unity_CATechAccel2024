@@ -9,10 +9,10 @@ public class RankCell : MonoBehaviour
     public TextMeshProUGUI score;
     public TextMeshProUGUI rank;
 
-    public void MakeText(string name, string s, string r)
+    public void MakeText(string receivedName, string receivedScore, string receivedRank)
     {
-        userName.text = name;
-        score.text = s;
-        rank.text = r;
+        userName.text = receivedName;
+        score.text = receivedScore;
+        rank.text = receivedRank;
     }
 }
