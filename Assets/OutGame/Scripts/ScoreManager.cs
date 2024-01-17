@@ -41,7 +41,7 @@ public class ScoreManager : MonoBehaviour
 
             dataCell.userName.text = scoreData.userScoreData[i].name;
             dataCell.score.text = scoreData.userScoreData[i].score.ToString();
-            dataCell.rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score);
+            dataCell.rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score).ToString();
         }
     }
 

@@ -12,20 +12,20 @@ public class Utility : MonoBehaviour
         S
     }
 
-    public static string ScoreToRank(int number)
+    public static Utility.Rank ScoreToRank(int score)
     {
-        switch (number)
+        switch (score)
         {
             case < 10:
-                return Rank.D.ToString();
+                return Rank.D;
             case < 20:
-                return Rank.C.ToString();
+                return Rank.C;
             case < 40:
-                return Rank.B.ToString();
+                return Rank.B;
             case < 70:
-                return Rank.A.ToString();
+                return Rank.A;
             default:
-                return Rank.Error.ToString();
+                return Rank.Error;
         }
 
     }
