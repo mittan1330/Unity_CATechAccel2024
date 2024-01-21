@@ -69,7 +69,7 @@ namespace CameraRunTime.ThirdPersonCamera
                 if (!CameraUtilities.IsCursorOverUserInterface())
                 {
                     CameraRotation();
-                    LockCursor();
+                    // LockCursor();
                     CameraZoom();
                 }
 
