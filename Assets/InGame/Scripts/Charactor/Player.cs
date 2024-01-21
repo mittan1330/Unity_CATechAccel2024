@@ -5,10 +5,23 @@ namespace BattleGame.Charactor
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Rigidbody))]
-    public class Player : MonoBehaviour
+
+	public class Character : MonoBehaviour
+    {
+		public static float hp;
+
+		// 前進速度
+		public float forwardSpeed;
+		// 旋回速度
+		public float rotateSpeed;
+		// ジャンプ威力
+		public float jumpPower;
+		protected Rigidbody rb;
+	}
+
+    public class Player : Character
     {
 		#region 変数
-		public static float hp;
 
         public float animSpeed = 1.5f;              // アニメーション再生速度設定
         public float lookSmoother = 3.0f;           // a smoothing setting for camera motion
@@ -17,15 +30,8 @@ namespace BattleGame.Charactor
         public float useCurvesHeight = 0.5f;        // カーブ補正の有効高さ（地面をすり抜けやすい時には大きくする）
 
         // 以下キャラクターコントローラ用パラメタ
-        // 前進速度
-        public float forwardSpeed = 7.0f;
-        // 旋回速度
-        public float rotateSpeed = 2.0f;
-        // ジャンプ威力
-        public float jumpPower = 3.0f;
         // キャラクターコントローラ（カプセルコライダ）の参照
         private CapsuleCollider col;
-        private Rigidbody rb;
         // キャラクターコントローラ（カプセルコライダ）の移動量
         private Vector3 velocity;
         // CapsuleColliderで設定されているコライダのHeiht、Centerの初期値を収める変数
@@ -81,6 +87,9 @@ namespace BattleGame.Charactor
         private void Init()
         {
 			hp = 100;
+			forwardSpeed = 7.0f;
+			rotateSpeed = 2.0f;
+			jumpPower = 3.0f;
 
 			// Animatorコンポーネントを取得する
 			anim = GetComponent<Animator>();
@@ -102,7 +111,6 @@ namespace BattleGame.Charactor
 			anim.speed = animSpeed;                             // Animatorのモーション再生速度に animSpeedを設定する
 			currentBaseState = anim.GetCurrentAnimatorStateInfo(0); // 参照用のステート変数にBase Layer (0)の現在のステートを設定する
 			rb.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
-
 		}
 
 		void CharactorJump()
