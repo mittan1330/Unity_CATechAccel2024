@@ -38,10 +38,8 @@ public class ScoreManager : MonoBehaviour
         for (int i = 0; i < scoreData.userScoreData.Length; i++)
         {
             var dataCell = Instantiate(rankCellPrefab, canvasTransform).GetComponent<RankCell>();
-
-            dataCell.userName.text = scoreData.userScoreData[i].name;
-            dataCell.score.text = scoreData.userScoreData[i].score.ToString();
-            dataCell.rank.text = Utility.ScoreToRank(scoreData.userScoreData[i].score).ToString();
+            RankCell RankCellScript = dataCell.GetComponent<RankCell>();
+            RankCellScript.MakeText(scoreData.userScoreData[i].name, scoreData.userScoreData[i].score.ToString(), Utility.ScoreToRank(scoreData.userScoreData[i].score).ToString());
         }
     }
 
