@@ -239,30 +239,13 @@ namespace CameraRunTime.ThirdPersonCamera
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             SaveCursorPosition();
         }
-        private void UnlockCursor()
-        {
-            if (cursorLocked)
-            {
-                UnityEngine.Cursor.lockState = CursorLockMode.Confined;
-                cursorLocked = false;
-                UnityEngine.Cursor.visible = true;
-                SetCursorPosition();
-            }
-        }
         private void SaveCursorPosition()
         {
             if (!cursorPositionSaved)
             {
-                // GetCursorPos(out mp);
                 cursorPositionSaved = true;
             }
         }
-        private void SetCursorPosition()
-        {
-            // SetCursorPos(mp.x, mp.y);
-            cursorPositionSaved = false;
-        }
-
         #endregion
 
         #region Gizmo
