@@ -135,7 +135,8 @@ GameObject:
   - component: {fileID: 24109940}
   - component: {fileID: 24109939}
   - component: {fileID: 24109938}
-  - component: {fileID: 24109942}
+  - component: {fileID: 24109943}
+  - component: {fileID: 24109944}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -227,7 +228,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &24109942
+--- !u!114 &24109943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24109937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e4e6eefdca24526ad1a094a0dc3601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rankCells: []
+  canvasTransform: {fileID: 284722148}
+  rankCellPrefab: {fileID: 8977346480709245846, guid: 9566322390d7d486e80e55a80e4af61a, type: 3}
+--- !u!114 &24109944
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -239,15 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac50593b69484aa1a1de331f71d0f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData:
-    userScoreData: []
-  rankCells:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rankCellPrefab: {fileID: 8977346480709245846, guid: 9566322390d7d486e80e55a80e4af61a, type: 3}
-  canvasTransform: {fileID: 284722148}
+  _view: {fileID: 24109943}
 --- !u!1 &123468238
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,7 +687,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -242, y: 129.99997}
+  m_AnchoredPosition: {x: -242, y: 129.99998}
   m_SizeDelta: {x: 484, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &284722149

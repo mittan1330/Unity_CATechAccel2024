@@ -17,30 +17,17 @@ public class DataClass
     public string rank;
 }
 
-
-
 public class ScoreManager : MonoBehaviour
 {
-    public ScoreData scoreData;
-    public RankCell[] rankCells;
-
-    [SerializeField] private GameObject rankCellPrefab;
-    [SerializeField] private Transform canvasTransform;
+    [SerializeField] ScoreManagerView _view;
+    [SerializeField] ScoreManagerModel _model;
+    private ScoreData scoreData;
 
     // Start is called before the first frame update
     void Start()
     {
+        _model = new ScoreManagerModel();
         ShowRankingScore();
-    }
-
-    void UpdateUIWithUserData()
-    {
-        for (int i = 0; i < scoreData.userScoreData.Length; i++)
-        {
-            var dataCell = Instantiate(rankCellPrefab, canvasTransform).GetComponent<RankCell>();
-            RankCell RankCellScript = dataCell.GetComponent<RankCell>();
-            RankCellScript.MakeText(scoreData.userScoreData[i].name, scoreData.userScoreData[i].score.ToString(), Utility.ScoreToRank(scoreData.userScoreData[i].score).ToString());
-        }
     }
 
     void ShowRankingScore()
@@ -49,11 +36,11 @@ public class ScoreManager : MonoBehaviour
 
         if (File.Exists(jsonFilePath))
         {
-            string jsonContent = File.ReadAllText(jsonFilePath);
+            string jsonContent = _model.GetJsonFile(jsonFilePath);
 
-            scoreData = JsonUtility.FromJson<ScoreData>("{\"userScoreData\":" + jsonContent + "}");
+            if (jsonContent != null) scoreData = JsonUtility.FromJson<ScoreData>("{\"userScoreData\":" + jsonContent + "}");
 
-            UpdateUIWithUserData();
+            _view.UpdateUIWithUserData(scoreData);
         }
         else
         {
