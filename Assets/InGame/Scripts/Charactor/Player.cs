@@ -16,6 +16,8 @@ namespace BattleGame.Charactor
 		// サンプルだと NetworkVariable<Unity.Collections.FixedString64Bytes>みたいな文字を共有しているが。。。。
 		// 数字を共有するには・・・
 		// 現在マイフレーム共有書き換えて更新しているが、数値が変更された時のみ更新をかけたい。
+		// 参考サイト
+		// https://anogame.net/netcode-networkvariable/
 		public static float hp;
 		// こんな感じに共有できる。
 		NetworkVariable<float> networkVariableHP = new NetworkVariable<float>(
