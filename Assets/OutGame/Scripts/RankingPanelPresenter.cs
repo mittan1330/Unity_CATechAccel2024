@@ -17,16 +17,19 @@ public class DataClass
     public string rank;
 }
 
-public class ScoreManager : MonoBehaviour
+public class RankingPanelPresenter : MonoBehaviour
 {
-    [SerializeField] ScoreManagerView _view;
-    [SerializeField] ScoreManagerModel _model;
+    [SerializeField] RankingPanelView _view;
+    private RankingPanelModel _model;
     private ScoreData scoreData;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        _model = new RankingPanelModel();
+    }
+
     void Start()
     {
-        _model = new ScoreManagerModel();
         ShowRankingScore();
     }
 

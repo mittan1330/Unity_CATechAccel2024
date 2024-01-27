@@ -240,8 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15e4e6eefdca24526ad1a094a0dc3601, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rankCells: []
-  canvasTransform: {fileID: 284722148}
+  contentTransform: {fileID: 284722148}
   rankCellPrefab: {fileID: 8977346480709245846, guid: 9566322390d7d486e80e55a80e4af61a, type: 3}
 --- !u!114 &24109944
 MonoBehaviour:
@@ -687,7 +686,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -242, y: 129.99998}
+  m_AnchoredPosition: {x: -242, y: 130}
   m_SizeDelta: {x: 484, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &284722149
