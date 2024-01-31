@@ -1,21 +1,25 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 
 namespace BattleGame.Charactor
 {
-    [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(CapsuleCollider))]
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(NetworkObject))]
-    [RequireComponent(typeof(NetworkRigidbody))]
-    [RequireComponent(typeof(NetworkAnimator))]
-    [RequireComponent(typeof(NetworkTransform))]
-	public class Player : NetworkBehaviour
+	[RequireComponent(typeof(NetworkObject))]
+	[RequireComponent(typeof(NetworkRigidbody))]
+	[RequireComponent(typeof(NetworkAnimator))]
+	[RequireComponent(typeof(NetworkTransform))]
+	public class tets : NetworkBehaviour
 	{
 		#region 変数
-		public static float hp;
 
+		// 現在のHPの設定だと、ネットワークで共有されないため・・
+		// サンプルだと NetworkVariable<Unity.Collections.FixedString64Bytes>みたいな文字を共有しているが。。。。
+		// 数字を共有するには・・・
+		// 現在マイフレーム共有書き換えて更新しているが、数値が変更された時のみ更新をかけたい。
+		// 参考サイト
+		// https://anogame.net/netcode-networkvariable/
+		public static float hp;
+		// こんな感じに共有できる。
 		NetworkVariable<float> networkVariableHP = new NetworkVariable<float>(
 			0,                                          // 初期値
 			NetworkVariableReadPermission.Everyone,     // 読み取り権限
@@ -23,76 +27,66 @@ namespace BattleGame.Charactor
 		);
 
 		public float animSpeed = 1.5f;              // アニメーション再生速度設定
-        public float lookSmoother = 3.0f;           // a smoothing setting for camera motion
-        public bool useCurves = true;               // Mecanimでカーブ調整を使うか設定する
-                                                    // このスイッチが入っていないとカーブは使われない
-        public float useCurvesHeight = 0.5f;        // カーブ補正の有効高さ（地面をすり抜けやすい時には大きくする）
-        // 以下キャラクターコントローラ用パラメタ
-        // 前進速度
-        public float forwardSpeed = 7.0f;
-        // 旋回速度
-        public float rotateSpeed = 2.0f;
-        // ジャンプ威力
-        public float jumpPower = 3.0f;
-        // キャラクターコントローラ（カプセルコライダ）の参照
-        private CapsuleCollider col;
-        private Rigidbody rb;
-        // キャラクターコントローラ（カプセルコライダ）の移動量
-        private Vector3 velocity;
-        // CapsuleColliderで設定されているコライダのHeiht、Centerの初期値を収める変数
-        private float orgColHight;
-        private Vector3 orgVectColCenter;
-        private Animator anim;                          // キャラにアタッチされるアニメーターへの参照
-        private AnimatorStateInfo currentBaseState;         // base layerで使われる、アニメーターの現在の状態の参照
+		public float lookSmoother = 3.0f;           // a smoothing setting for camera motion
+		public bool useCurves = true;               // Mecanimでカーブ調整を使うか設定する
+													// このスイッチが入っていないとカーブは使われない
+		public float useCurvesHeight = 0.5f;        // カーブ補正の有効高さ（地面をすり抜けやすい時には大きくする）
+
+		// 以下キャラクターコントローラ用パラメタ
+		// 前進速度
+		public float forwardSpeed = 7.0f;
+		// 旋回速度
+		public float rotateSpeed = 2.0f;
+		// ジャンプ威力
+		public float jumpPower = 3.0f;
+		// キャラクターコントローラ（カプセルコライダ）の参照
+		private CapsuleCollider col;
+		private Rigidbody rb;
+		// キャラクターコントローラ（カプセルコライダ）の移動量
+		private Vector3 velocity;
+		// CapsuleColliderで設定されているコライダのHeiht、Centerの初期値を収める変数
+		private float orgColHight;
+		private Vector3 orgVectColCenter;
+		private Animator anim;                          // キャラにアタッチされるアニメーターへの参照
+		private AnimatorStateInfo currentBaseState;         // base layerで使われる、アニメーターの現在の状態の参照
 		private AnimatorStateInfo attackBaseState;
+
 		float h;
 		float v;
-		Vector2 moveDir;
+
 		// アニメーター各ステートへの参照
 		static int idleState = Animator.StringToHash("Base Layer.Idle");
-        static int locoState = Animator.StringToHash("Base Layer.Locomotion");
-        static int backState = Animator.StringToHash("Base Layer.WalkBack");
-        static int jumpState = Animator.StringToHash("Base Layer.Jump");
-        static int restState = Animator.StringToHash("Base Layer.Rest");
+		static int locoState = Animator.StringToHash("Base Layer.Locomotion");
+		static int backState = Animator.StringToHash("Base Layer.WalkBack");
+		static int jumpState = Animator.StringToHash("Base Layer.Jump");
+		//追加アニメーションステート。
+		static int restState = Animator.StringToHash("Base Layer.Rest");
 		static int attackState = Animator.StringToHash("Attack.Idle");
 
-		#region NetCodes
-		private bool _isKeySpace;
-		private bool _isForceMoving = true;
-		private NetworkVariable<Unity.Collections.FixedString64Bytes> _playerName = new();
-		[SerializeField] private TextMesh playerNameTextMesh = null;
-
-		#endregion
 		#endregion
 
 		#region monofunction
 		void Start()
 		{
 			Init();
-			if(IsOwner)
-            {
+			if (IsOwner)
+			{
 				networkVariableHP.Value = hp;
-            }
+			}
 		}
 
-        private void Update()
-        {
-			if (!IsOwner)
-				return;
-			SetInputServerRpc(
-				Input.GetAxisRaw("Horizontal"),
-				Input.GetAxisRaw("Vertical"),
-				CharactorJump()
-				);
-        }
-
-        void FixedUpdate()
+		private void Update()
 		{
-            OnMoveFunction();
-            if (IsServer)
-            {
-				CharactorNetWorkMove();
-            }
+			if (IsOwner)
+			{
+				networkVariableHP.Value = hp;
+			}
+			UpdateFunction();
+		}
+
+		void FixedUpdate()
+		{
+			OnMoveFunction();
 		}
 
 		private void OnCollisionStay(Collision collision)
@@ -102,9 +96,11 @@ namespace BattleGame.Charactor
 				if (collision.gameObject.CompareTag("Enemy"))
 				{
 					Debug.Log("Enemy");
+					// 今回は共有していない値から引いてUpdateで共有している。
 					if (!IsOwner)
 						return;
 					hp -= 1f;
+					// networkVariableHP.Value--;
 				}
 			}
 
@@ -114,81 +110,20 @@ namespace BattleGame.Charactor
 
 		#region function
 		#region NetCodesFunction
-		void OnChangePlayerName(Unity.Collections.FixedString64Bytes prev, Unity.Collections.FixedString64Bytes current)
-		{
-			Debug.Log("OnChangePlayerName");
-			if (playerNameTextMesh != null)
-			{
-				playerNameTextMesh.text = current.Value;
-			}
-		}
-
 		[Unity.Netcode.ServerRpc]
 		private void SetInputServerRpc(float x, float y, bool space)
 		{
 			h = x;
 			v = y;
-			moveDir = new Vector2(x, y);
 			_isKeySpace = space;
+
 			float ho = Mathf.Abs(h);
 			anim.SetFloat("Speed", v + ho);                          // Animator側で設定している"Speed"パラメタにvを渡す
 			anim.SetFloat("Direction", h / 2);                      // Animator側で設定している"Direction"パラメタにhを渡す
 			anim.speed = animSpeed;                             // Animatorのモーション再生速度に animSpeedを設定する
 			currentBaseState = anim.GetCurrentAnimatorStateInfo(0); // 参照用のステート変数にBase Layer (0)の現在のステートを設定する
 
-			rb.useGravity = true;
-		}
-
-		public override void OnNetworkSpawn()
-		{
-			if (IsServer)
-			{
-				Debug.Log("OnNetworkSpawn IsServer");
-			}
-
-			if (IsOwner)
-			{
-				Debug.Log("OnNetworkSpawn IsOwner");
-				var camera = Camera.main.GetComponent<CameraRunTime.ThirdPersonCamera.ThirdPersonCameraController>();
-				camera.Target = transform;
-			}
-		}
-
-		void CharactorNetWorkMove()
-        {
-			float h0 = Mathf.Abs(moveDir.x);
-			anim.SetFloat("Speed", moveDir.y + h0);
-			anim.SetFloat("Direction", moveDir.x / 2);
-			anim.speed = animSpeed;
-			currentBaseState = anim.GetCurrentAnimatorStateInfo(0);
-
-			var moveVector = new Vector3(moveDir.x, 0, moveDir.y);
-			if (moveVector.magnitude > 1)
-			{
-				moveVector.Normalize();
-			}
-			var coefficient = (forwardSpeed * moveVector.magnitude - rb.velocity.magnitude) / Time.fixedDeltaTime;
-
-			rb.AddForce(moveVector * coefficient);
-
-			// 移動量が0の時は回転計算をしない。方向がリセットされるため。
-			if (coefficient > 0)
-			{
-				transform.localRotation = Quaternion.Lerp(
-					transform.localRotation,
-					Quaternion.LookRotation(moveVector),
-					rotateSpeed * Time.deltaTime
-				);
-			}
-
-            anim.SetBool("Running", coefficient > 0); //-> Animationセットをする
-
-            if (_isKeySpace)
-            {
-				//Jump処理
-				rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
-				anim.SetBool("Jump", true);
-			}
+			rb.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
 		}
 		#endregion
 
@@ -196,7 +131,7 @@ namespace BattleGame.Charactor
 		/// 初期化
 		/// </summary>
 		private void Init()
-        {
+		{
 			hp = 100;
 
 			// Animatorコンポーネントを取得する
@@ -207,28 +142,21 @@ namespace BattleGame.Charactor
 			// CapsuleColliderコンポーネントのHeight、Centerの初期値を保存する
 			orgColHight = col.height;
 			orgVectColCenter = col.center;
-
-			_playerName.OnValueChanged += OnChangePlayerName;
-
-			// 先に接続済みのプレイヤーオブジェクトはplayerNameがセットされているので代入する。またOnValueChangedは実行されない。
-			playerNameTextMesh.text = _playerName.Value.Value;
 		}
 
-		void InputFunction()
-        {
-			h = Input.GetAxis("Horizontal");              // 入力デバイスの水平軸をhで定義
-			v = Input.GetAxis("Vertical");                // 入力デバイスの垂直軸をvで定義
-			float ho = Mathf.Abs(h);
-			anim.SetFloat("Speed", v + ho);                          // Animator側で設定している"Speed"パラメタにvを渡す
-			anim.SetFloat("Direction", h / 2);                      // Animator側で設定している"Direction"パラメタにhを渡す
-			anim.speed = animSpeed;                             // Animatorのモーション再生速度に animSpeedを設定する
-			currentBaseState = anim.GetCurrentAnimatorStateInfo(0); // 参照用のステート変数にBase Layer (0)の現在のステートを設定する
-			rb.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
-
+		private void UpdateFunction()
+		{
+			if (!IsOwner)
+				return;
+			SetInputServerRpc(
+				Input.GetAxisRaw("Horizontal"),
+				Input.GetAxisRaw("Vertical"),
+				CharactorJump()
+				);
 		}
 
 		bool CharactorJump()
-        {
+		{
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
 				// スペースキーを入力したら
@@ -240,7 +168,7 @@ namespace BattleGame.Charactor
 					//ステート遷移中でなかったらジャンプできる
 					if (!anim.IsInTransition(0))
 					{
-						rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
+						//rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
 						anim.SetBool("Jump", true);     // Animatorにジャンプに切り替えるフラグを送る
 						return true;
 					}
@@ -250,7 +178,7 @@ namespace BattleGame.Charactor
 		}
 
 		void CharactorMove()
-        {
+		{
 			Vector3 cameraPos = new Vector3(Camera.main.transform.position.x, 0, Camera.main.transform.position.z);
 
 			Vector3 cameraForward = this.transform.position - cameraPos;
@@ -266,8 +194,8 @@ namespace BattleGame.Charactor
 
 			// 左右のキー入力でキャラクタをY軸で旋回させる
 			transform.Rotate(0, h * rotateSpeed, 0);
-            if (velocity != Vector3.zero)
-            {
+			if (velocity != Vector3.zero)
+			{
 				// 移動方向に向かせる。
 				transform.rotation = Quaternion.LookRotation(velocity);
 			}
@@ -323,6 +251,7 @@ namespace BattleGame.Charactor
 					anim.SetBool("Jump", false);
 				}
 			}
+			#region 追加機能処理　ー＞　NetWork同期のために入力はSetInputServerRpc（）にまとめたい。
 			// IDLE中の処理
 			// 現在のベースレイヤーがidleStateの時
 			else if (currentBaseState.fullPathHash == idleState)
@@ -356,12 +285,11 @@ namespace BattleGame.Charactor
 					anim.SetBool("Rest", false);
 				}
 			}
+			#endregion
 		}
 
 		void OnMoveFunction()
-        {
-			InputFunction();
-
+		{
 			CharactorMove();
 		}
 
@@ -371,6 +299,6 @@ namespace BattleGame.Charactor
 			col.height = orgColHight;
 			col.center = orgVectColCenter;
 		}
-        #endregion
-    }
+		#endregion
+	}
 }
