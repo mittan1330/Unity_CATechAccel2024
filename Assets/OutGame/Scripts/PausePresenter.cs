@@ -29,7 +29,7 @@ public class PausePresenter : MonoBehaviour
 
     public void ResumeGame()
     {
-        _view.destroyPauseUI();
+        _view.DestroyPauseUI();
         Time.timeScale = 1;
     }
 }

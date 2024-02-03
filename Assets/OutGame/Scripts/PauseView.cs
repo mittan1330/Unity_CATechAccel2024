@@ -5,22 +5,37 @@ public class PauseView : MonoBehaviour
 {
     [SerializeField] private GameObject pauseUIPrefab;
     [SerializeField] private Transform canvasTransform;
-    [SerializeField] public GameObject pauseUIInstance;
+
+    public GameObject pauseUIInstance;
 
     void Awake()
     {
-        DOTween.Init();
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        DOTween.Init(); 
     }
 
     public void makePauseUI()
     {
         pauseUIInstance = GameObject.Instantiate(pauseUIPrefab, canvasTransform) as GameObject;
-        RectTransform PauseRect = pauseUIInstance.GetComponent<RectTransform>();
-        PauseRect.DOScale(new Vector3(2, 2, 2), 3f);
+
+        if(hasPauseUIInstance)
+        {
+            RectTransform PauseRect = pauseUIInstance.GetComponent<RectTransform>();
+            PauseRect.DOScale(new Vector3(2, 2, 2), 3f);
+        }
     }
 
-    public void destroyPauseUI()
+    public void DestroyPauseUI()
     {
         Destroy(pauseUIInstance);
+    }
+
+    public bool hasPauseUIInstance
+    {
+        get { return pauseUIInstance != null; }
     }
 }
