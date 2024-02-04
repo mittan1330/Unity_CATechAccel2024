@@ -59,6 +59,7 @@ namespace CameraRunTime.ThirdPersonCamera
 
         void Update()
         {
+
             if (Target != null)
             {
                 SphereCastRadius = Mathf.Clamp(SphereCastRadius, 0.23f, 0.33f);

@@ -11,6 +11,8 @@ namespace BattleGame.Charactor
 
         private void FixedUpdate()
         {
+            if (GameManager.isTimeStop != true) return;
+
             if (30 <= Vector3.Angle(Vector3.up, transform.up))
             {
                 return;
