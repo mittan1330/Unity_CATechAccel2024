@@ -634,6 +634,7 @@ MonoBehaviour:
   pauseUIPrefab: {fileID: 5320923828011157269, guid: e938be971ce1e48bf983e5d786fecbfd, type: 3}
   canvasTransform: {fileID: 159615758}
   pauseUIInstance: {fileID: 0}
+  PauseRect: {fileID: 0}
 --- !u!114 &159615760
 MonoBehaviour:
   m_ObjectHideFlags: 0

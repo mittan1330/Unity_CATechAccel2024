@@ -23,13 +23,15 @@ public class PausePresenter : MonoBehaviour
 
     public void PauseGame()
     {
-        _view.makePauseUI();
-        Time.timeScale = 0;
+        _view.MakePauseUI();
+        //Time.timeScale = 0;
+        GameManager.isTimeStop = false;
     }
 
     public void ResumeGame()
     {
+        //Time.timeScale = 1;
+        GameManager.isTimeStop = true;
         _view.DestroyPauseUI();
-        Time.timeScale = 1;
     }
 }

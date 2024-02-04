@@ -55,11 +55,15 @@ namespace BattleGame.Charactor
 
         private void Update()
         {
+			if (GameManager.isTimeStop != true) return;
+            
 			CharactorJump();
         }
 
         void FixedUpdate()
 		{
+			if (GameManager.isTimeStop != true) return;
+
 			OnMoveFunction();
 		}
 
