@@ -8,7 +8,7 @@ namespace BattleGame.Charactor
 
 	public class Character : MonoBehaviour
     {
-		public static float hp;
+		public float hp;
 
 		// 前進速度
 		public float forwardSpeed;
@@ -16,7 +16,7 @@ namespace BattleGame.Charactor
 		public float rotateSpeed;
 		// ジャンプ威力
 		public float jumpPower;
-		protected Rigidbody rb;
+		protected Rigidbody PlayerRigidbody;
 	}
 
     public class Player : Character
@@ -86,16 +86,11 @@ namespace BattleGame.Charactor
         /// </summary>
         private void Init()
         {
-			hp = 100;
-			forwardSpeed = 7.0f;
-			rotateSpeed = 2.0f;
-			jumpPower = 3.0f;
-
 			// Animatorコンポーネントを取得する
 			anim = GetComponent<Animator>();
 			// CapsuleColliderコンポーネントを取得する（カプセル型コリジョン）
 			col = GetComponent<CapsuleCollider>();
-			rb = GetComponent<Rigidbody>();
+			PlayerRigidbody = GetComponent<Rigidbody>();
 			// CapsuleColliderコンポーネントのHeight、Centerの初期値を保存する
 			orgColHight = col.height;
 			orgVectColCenter = col.center;
@@ -110,7 +105,7 @@ namespace BattleGame.Charactor
 			anim.SetFloat("Direction", h / 2);                      // Animator側で設定している"Direction"パラメタにhを渡す
 			anim.speed = animSpeed;                             // Animatorのモーション再生速度に animSpeedを設定する
 			currentBaseState = anim.GetCurrentAnimatorStateInfo(0); // 参照用のステート変数にBase Layer (0)の現在のステートを設定する
-			rb.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
+			PlayerRigidbody.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
 		}
 
 		void CharactorJump()
@@ -126,7 +121,7 @@ namespace BattleGame.Charactor
 					//ステート遷移中でなかったらジャンプできる
 					if (!anim.IsInTransition(0))
 					{
-						rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
+						PlayerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
 						anim.SetBool("Jump", true);     // Animatorにジャンプに切り替えるフラグを送る
 					}
 				}
@@ -182,7 +177,7 @@ namespace BattleGame.Charactor
 						float jumpHeight = anim.GetFloat("JumpHeight");
 						float gravityControl = anim.GetFloat("GravityControl");
 						if (gravityControl > 0)
-							rb.useGravity = false;  //ジャンプ中の重力の影響を切る
+							PlayerRigidbody.useGravity = false;  //ジャンプ中の重力の影響を切る
 
 						// レイキャストをキャラクターのセンターから落とす
 						Ray ray = new Ray(transform.position + Vector3.up, -Vector3.up);
