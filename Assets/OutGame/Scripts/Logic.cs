@@ -16,7 +16,7 @@ public class DataClass
     public string rank;
 }
 
-public class Logic : MonoBehaviour
+public class Logic
 {
     public View view;
     public ScoreData scoreData;
