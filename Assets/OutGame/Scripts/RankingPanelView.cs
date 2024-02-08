@@ -26,7 +26,8 @@ public class RankingPanelView : MonoBehaviour
         {
             var dataCell = Instantiate(rankCellPrefab, contentTransform).GetComponent<RankCell>();
             var thisScoreData = scoreData.userScoreData[i];
-            dataCell.MakeText(thisScoreData.name, thisScoreData.score.ToString(), Utility.ScoreToRank(thisScoreData.score).ToString());
+            var thisScore = thisScoreData.score;
+            dataCell.MakeText(thisScoreData.name, thisScore.ToString(), Utility.ScoreToRank(thisScore).ToString());
         }
     }
 }

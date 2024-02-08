@@ -25,12 +25,17 @@ public class RankingPanelPresenter : MonoBehaviour
 
     private void Awake()
     {
-        _model = new RankingPanelModel();
+        Init();
     }
 
     void Start()
     {
         ShowRankingScore();
+    }
+
+    private void Init()
+    {
+        _model = new RankingPanelModel();
     }
 
     void ShowRankingScore()
@@ -39,11 +44,14 @@ public class RankingPanelPresenter : MonoBehaviour
 
         if (File.Exists(jsonFilePath))
         {
-            string jsonContent = _model.GetJsonFile(jsonFilePath);
+            if (File.ReadAllText(jsonFilePath) != null)
+            {
+                string jsonContent = File.ReadAllText(jsonFilePath);
+                scoreData = JsonUtility.FromJson<ScoreData>("{\"userScoreData\":" + jsonContent + "}");
+                _model.SetScoreData(scoreData);
 
-            if (jsonContent != null) scoreData = JsonUtility.FromJson<ScoreData>("{\"userScoreData\":" + jsonContent + "}");
-
-            _view.UpdateUIWithUserData(scoreData);
+                _view.UpdateUIWithUserData(scoreData);
+            }
         }
         else
         {
